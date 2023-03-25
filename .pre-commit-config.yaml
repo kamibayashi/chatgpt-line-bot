@@ -45,6 +45,15 @@ repos:
           - 'pydantic>=1.10.4'
           - 'sqlalchemy-stubs'
 
+  - repo: local
+    hooks:
+      - id: lizard
+        name: lizard
+        entry: lizard -C 10
+        language: python
+        types: [file, python]
+        exclude: ^test_.*$
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
     hooks:
