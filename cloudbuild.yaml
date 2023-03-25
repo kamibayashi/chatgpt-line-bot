@@ -1,0 +1,13 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/${PROJECT_ID}/chatgpt-line-bot', '.', '--build-arg', 'BUILD_ENV=${_BUILD_ENV}']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/${PROJECT_ID}/chatgpt-line-bot']
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args: ['run', 'deploy', 'chatgpt-line-bot', '--image', 'gcr.io/${PROJECT_ID}/chatgpt-line-bot', '--region', 'asia-northeast1', '--platform', 'managed']
+timeout: 1200s
+images: ['gcr.io/${PROJECT_ID}/chatgpt-line-bot']
+
+substitutions:
+  _BUILD_ENV: production

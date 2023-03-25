@@ -1,0 +1,51 @@
+version: '3'
+services:
+  web:
+    tty: true
+    stdin_open: true
+    environment:
+      BUILD_ENV: "${BUILD_ENV}"
+    env_file:
+      - .env
+    build: .
+    working_dir: /app
+    command: bash -c "poe migrate && uvicorn app.main:app --host 0.0.0.0 --port 8080 --reload"
+    volumes:
+      - .:/app
+    ports:
+      - "8080:8080"
+    restart: always
+    depends_on:
+      - db
+    links:
+      - db
+    networks:
+      - fastapi_network
+
+  db:
+    image: mysql:latest
+    restart: always
+    command: >
+      mysqld --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
+    ports:
+      - "3307:3306"
+    env_file:
+      - .env
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      - fastapi_network
+    volumes:
+      - db_volume:/var/lib/mysql
+
+volumes:
+  db_volume:
+    driver: local
+
+networks:
+  fastapi_network:
+    name: fastapi_network
+    driver: bridge
