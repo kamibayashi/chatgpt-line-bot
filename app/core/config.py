@@ -18,9 +18,9 @@ class Settings(BaseSettings):
 
     DECODE: str = "utf-8"
 
-    MODEL_NAME: str = "gpt-3.5-turbo"
+    MODEL_NAME: str = "gpt-4"
     TEMPUTURE: float = 0.7
-    MAX_TOKENS: int = 1000
+    MAX_TOKENS: int = 1500
 
     TEMPLATE: str = """あなたは全知全能の全てを知っているAIでHumanと会話しています。
 
